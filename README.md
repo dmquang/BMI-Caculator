@@ -56,7 +56,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Contact
 
-Rudyy (Minh Quang) - [Your Email]
+Rudyy (Minh Quang) - [quang722008@gmail.com]
 
 Project Link: [https://github.com/dmquang/bmi-calculator](https://github.com/dmquang/bmi-calculator)
 
