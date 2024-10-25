@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    
+    <!-- Thêm các dòng sau để đặt favicon -->
+    <link rel="icon" type="image/png" href="images/BMI.png">
+    <link rel="apple-touch-icon" href="images/BMI.png">
+    
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/raphael@2.3.0/raphael.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/justgage@1.3.5/justgage.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Open+Sans&family=Caveat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="images/BMI.png" alt="BMI Calculator Logo" class="header-logo">
+            <h1>BMI Calculator</h1>
+        </div>
+    </header>
+
+    <section id="results" style="display: none;">
+        <h2>Your Results</h2>
+        <div id="bmiGauge" style="width:300px; height:200px;"></div>
+        <p id="bmi-result"></p>
+        <p id="calorie-advice"></p>
+        <div id="lifestyle-advice"></div>
+        <div id="diet-recommendations"></div>
+        <div id="workout-plan"></div>
+    </section>
+
+    <main>
+        <section id="calculator">
+            <h2>Calculate Your BMI</h2>
+            <form id="bmi-form">
+                <label for="age">Age:</label>
+                <input type="number" id="age" required>
+
+                <label for="gender">Gender:</label>
+                <select id="gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+
+                <label for="height">Height (cm):</label>
+                <input type="number" id="height" required>
+
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" required>
+
+                <button type="submit">Calculate BMI</button>
+            </form>
+        </section>
+
+        <section id="health-tips">
+            <h2>Health Tips for a Better Lifestyle</h2>
+            <div class="tips-container">
+                <div class="tip-card">
+                    <img src="images/diet.png" alt="Balanced diet" class="tip-icon">
+                    <h3>Eat a Balanced Diet</h3>
+                    <p>Include a variety of fruits, vegetables, whole grains, lean proteins, and healthy fats in your daily meals.</p>
+                </div>
+                <div class="tip-card">
+                    <img src="images/exercise.png" alt="Regular exercise" class="tip-icon">
+                    <h3>Exercise Regularly</h3>
+                    <p>Aim for at least 150 minutes of moderate-intensity aerobic activity or 75 minutes of vigorous-intensity aerobic activity per week.</p>
+                </div>
+                <div class="tip-card">
+                    <img src="images/hydrate.png" alt="Stay hydrated" class="tip-icon">
+                    <h3>Stay Hydrated</h3>
+                    <p>Drink at least 8 glasses of water per day to keep your body functioning optimally.</p>
+                </div>
+                <div class="tip-card">
+                    <img src="images/sleep.png" alt="Get enough sleep" class="tip-icon">
+                    <h3>Get Enough Sleep</h3>
+                    <p>Aim for 7-9 hours of quality sleep each night to support your physical and mental health.</p>
+                </div>
+                <div class="tip-card">
+                    <img src="images/stress.png" alt="Manage stress" class="tip-icon">
+                    <h3>Manage Stress</h3>
+                    <p>Practice stress-reduction techniques like meditation, deep breathing, or yoga to improve your overall well-being.</p>
+                </div>
+                <div class="tip-card">
+                    <img src="images/Portion.png" alt="Practice portion control" class="tip-icon">
+                    <h3>Practice Portion Control</h3>
+                    <p>Use smaller plates and be mindful of serving sizes to maintain a healthy weight.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 BMI Calculator. All rights reserved.</p>
+            <p>Developed and maintained by <span class="author">Rudyy (Minh Quang)</span></p>
+            <p>Source code available on <a href="https://github.com/dmquang/BMI-Caculator" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/rudeus.2008" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+                <a href="https://github.com/dmquang" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+                <a href="https://t.me/rudyy_greyrat" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('bmi-form');
+            const resultsSection = document.getElementById('results');
+            let gauge; // Variable to hold the gauge instance
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateBMI();
+            });
+
+            function calculateBMI() {
+                const age = document.getElementById('age').value;
+                const gender = document.getElementById('gender').value;
+                const height = document.getElementById('height').value / 100; // convert cm to m
+                const weight = document.getElementById('weight').value;
+
+                const bmi = weight / (height * height);
+                displayResults(bmi);
+            }
+
+            function displayResults(bmi) {
+                const bmiResult = document.getElementById('bmi-result');
+                const calorieAdvice = document.getElementById('calorie-advice');
+                const lifestyleAdvice = document.getElementById('lifestyle-advice');
+
+                bmiResult.textContent = `Your BMI is ${bmi.toFixed(1)}`;
+                
+                if (bmi < 18.5) {
+                    calorieAdvice.textContent = "You may need to increase your calorie intake.";
+                    lifestyleAdvice.textContent = "Focus on nutrient-dense foods and strength training exercises.";
+                } else if (bmi >= 18.5 && bmi < 25) {
+                    calorieAdvice.textContent = "Your calorie intake seems appropriate for your height and weight.";
+                    lifestyleAdvice.textContent = "Maintain a balanced diet and regular exercise routine.";
+                } else {
+                    calorieAdvice.textContent = "You may benefit from reducing your calorie intake.";
+                    lifestyleAdvice.textContent = "Focus on a balanced diet, portion control, and regular exercise.";
+                }
+
+                resultsSection.style.display = 'block';
+
+                // Clear previous gauge
+                if (gauge) {
+                    gauge.destroy();
+                }
+
+                // Draw the BMI gauge
+                gauge = new JustGage({
+                    id: "bmiGauge",
+                    value: bmi,
+                    min: 10,
+                    max: 40,
+                    title: "BMI",
+                    label: "kg/m²",
+                    levelColors: ["#FF6384", "#36A2EB", "#FFCE56"],
+                    customSectors: [{
+                        color: "#FF6384",
+                        lo: 10,
+                        hi: 18.5
+                    }, {
+                        color: "#36A2EB",
+                        lo: 18.5,
+                        hi: 25
+                    }, {
+                        color: "#FFCE56",
+                        lo: 25,
+                        hi: 40
+                    }]
+                });
+            }
+        });
+    </script>
+</body>
+</html>
